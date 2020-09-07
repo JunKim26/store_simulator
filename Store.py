@@ -88,6 +88,7 @@ class InvalidCheckoutError(Exception):
     """Exception for if customer ID does not match a customer in store during checkout"""
     pass
 
+
 # define class Store
 class Store:
     """Represents a store, which have a number of products in its inventory and customers as members."""
@@ -106,37 +107,44 @@ class Store:
         """Returns the members list"""
         return self._members
 
-    def add_product(self,product_ID):
-        """adds product object into inventory"""
+    def add_product(self,product):
+        """adds product ID into inventory"""
 
-        self._inventory.append(product_ID)
+        self._inventory.append(product)
 
-    def add_member(self,member_ID):
-        """adds customer object to member list"""
+    def add_member(self,member):
+        """adds customer ID to member list"""
 
-        self._members.append(member_ID)
+        self._members.append(member)
 
     def get_product_from_id(self,id):
         """Takes a Product ID and returns the Product object with the matching ID"""
 
+        if self._inventory == []:
+            return None
+
         for product in self._inventory: # for loop to cycle through every product to find product with matching id
+
 
             if id == product.get_product_id():
                 return product
 
-            else:
-                return None
+        else:
+            return None
 
     def get_member_from_id(self,id):
         """Takes a member ID and returns the customer object with the matching ID"""
 
+        if self._members == []:
+            return None
+
         for member in self._members: # for loop to cycle through every members to find the matching id
 
-            if id == member.get_customer_id:
+            if id == member.get_customer_id():
                 return member
 
-            else:
-                return None
+        else:
+            return None
 
     def product_search(self,string):
         """Takes a search string and returns a sorted list of ID codes"""
@@ -159,62 +167,42 @@ class Store:
     def add_product_to_member_cart(self,productID,customerID):
         """adds product into customer's cart, assuming both member id and product id are valid and available"""
 
-        for item in self._inventory: #checks through every product in inventory to find the respective product'
+        product = self.get_product_from_id(productID)
+        member = self.get_member_from_id(customerID)
 
-            if item.get_product_id() == productID: #if there is a matching product in the inventory
-
-                for member in self._members: #checks through every memberID in members list to find the member
-
-                    if member.get_customer_id() == customerID: #if there is a matching member in the list of members
-
-                        if item.get_quantity_available() != 0:  #if there is at least one product quantity available
-
-                            member.add_product_to_cart(item) # adds product into member's cart
-
-        list_of_ids = []
-        list_of_members = []
-
-        for product in self._inventory:
-            list_of_ids.append(product.get_product_id())
-
-        for member in self._members:
-            list_of_members.append(member.get_customer_id())
-
-        if productID not in list_of_ids: #if there is no matching product in inventory, return statement
+        if product == None:
             return "product ID not found"
 
-        if customerID not in list_of_members: #if there is no matching member in member list, return statement
+        if member == None:
             return "member ID not found"
 
-        for item in self._inventory: #checks through every product in inventory to find the respective product'
+        if product.get_quantity_available() == 0:
+            return "product out of stock"
 
-            if item.get_product_id() == productID: #if there is a matching product in the inventory
 
-                for member in self._members: #checks through every memberID in members list to find the member
+        member.add_product_to_cart(product) # adds product into member's cart
 
-                    if member.get_customer_id() == customerID: #if there is a matching member in the list of members
-
-                        if item.get_quantity_available() == 0:  #if there is no quantity available
-
-                            return "product out of stock"
+        return "product added to cart"
 
 
     def check_out_member(self,customer_ID):
         """Checks out member and gives them the charge of the items in the cart if items were valid and available"""
 
-        list_of_members_2 = []
+        list_of_members_id = []
 
         for member in self._members:
-            list_of_members_2.append(member.get_customer_id())
+            list_of_members_id.append(member.get_customer_id())
 
-        if customer_ID not in list_of_members_2: #condition for raising the exception error
+        if customer_ID not in list_of_members_id: #if customer is not a member, raise error
             raise InvalidCheckoutError
+
+        member = self.get_member_from_id(customer_ID)
 
         premium_charge = 0
 
         for item in member.get_cart(): #each product in cart
 
-            if item.get_quantity_available != 0:  #checks availability of stock on product
+            if item.get_quantity_available() != 0:  #checks availability of stock on product
 
                 premium_charge += item.get_price()  #adds each products cost into charge
 
@@ -223,40 +211,40 @@ class Store:
             else:
                 continue
 
+        member.empty_cart()
 
-        for member in self._members:  # checks through every memberID in members list
+        if member.is_premium_member() == True: #if member is premium member skip the shipping charge
 
-            if member.get_customer_id() == customer_ID:  # if there is a matching member in the list of members
+            return premium_charge
 
-                member.empty_cart
+        else:
 
-                if member.is_premium_member() == True: #if member is premium member skip the shipping charge
-
-                    return premium_charge
-
-                else:
-
-                    return premium_charge*1.07
+            return premium_charge*1.07
 
 def main():
     """main function that runs if file is run as script"""
 
     try:
-        p1 = Product("889", "Rodent of unusual size", "when a rodent of the usual size just won't do", 33.45, 8)
-        p2 = Product("890", "cat", "tony the tiger", 60, 3)
+        p1 = Product("889", "Rodent of unusual size", "when a rodent of the usual size just won't do", 33, 1)
+        p2 = Product("890", "cat", "tony the tiger", 60, 1)
         p3 = Product("891", "dog", "clifford the big red dog", 20, 1)
         c1 = Customer("Yinsheng", "QWF", True)
+        c2 = Customer("David", "QLR", False)
         myStore = Store()
         myStore.add_product(p1)
         myStore.add_product(p2)
         myStore.add_product(p3)
         myStore.add_member(c1)
+        myStore.add_member(c2)
         myStore.add_product_to_member_cart("889", "QWF")
         myStore.add_product_to_member_cart("890", "QWF")
-        myStore.add_product_to_member_cart("891", "QWF")
-        result = myStore.check_out_member("QWF")
+        myStore.add_product_to_member_cart("889", "QLR")
+        myStore.add_product_to_member_cart("891", "QLR")
+        result1 = myStore.check_out_member("QWF")
+        result2 = myStore.check_out_member("QLR")
 
-        print (result)
+        print (result1)
+        print (result2)
 
     except InvalidCheckoutError:
         print("Customer ID does not match a member of the Store")
