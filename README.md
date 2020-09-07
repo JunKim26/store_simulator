@@ -13,5 +13,5 @@ A Customer object represents a customer with a name and account ID. Customers mu
 
 **Store:**
 A Store object represents a store, which has some number of products in its inventory and some number of customers as members.
-* A Store's inventory is a collection of Products that are part of the Store - you can choose what type of collection (e.g. list, dictionary, etc.)
-* A Store's membership is a collection of Customers that are members of the Store - you can choose what type of collection (e.g. list, dictionary, etc.)
+* A Store's inventory is a collection of Products that are part of the Store 
+* A Store's membership is a collection of Customers that are members of the Store 
