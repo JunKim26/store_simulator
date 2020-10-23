@@ -1,6 +1,6 @@
 # Store_Simulator
 
-This program will is an online store simulator. It hase three classes: Product, Customer and Store.
+This program is an online store simulator. It hase three classes: Product, Customer and Store.
 
 
 **Product:**
@@ -8,7 +8,7 @@ A Product object represents a product with an ID code, title, description, price
 
 
 **Customer:**
-A Customer object represents a customer with a name and account ID. Customers must be members of the Store to make a purchase. Premium members get free shipping.
+A Customer object represents a customer with a name and account ID. Customers must be members of the Store to make a purchase. Premium members get free shipping which is calculatd at check out. Each customer will have a cart that will cointain every product that the customer has added into. This interacts with the store class to keep track of inventory. 
 
 
 **Store:**
