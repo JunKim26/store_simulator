@@ -4,7 +4,7 @@ This program is an online store simulator. It hase three classes: Product, Custo
 
 
 **Product:**
-A Product object represents a product with an ID code, title, description, price and quantity available.
+A Product object represents a product with an ID code, title, description, price and quantity available. When the product is added to someone's cart the cost of the product will be added to the overall charge of the customer's cart. 
 
 
 **Customer:**
